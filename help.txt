@@ -1,0 +1,1972 @@
+Help on module minescript:
+
+NAME
+    minescript - minescript v4.0 distributed via Minescript jar file
+
+DESCRIPTION
+    Usage: import minescript  # from Python script
+
+    User-friendly API for scripts to make function calls into the
+    Minescript mod.  This module should be imported by other
+    scripts and not run directly.
+
+CLASSES
+    builtins.Exception(builtins.BaseException)
+        BlockPackerException
+    builtins.object
+        AddEntityEvent
+        BlockPack
+        BlockPacker
+        BlockUpdateEvent
+        ChatEvent
+        ChunkEvent
+        DamageEvent
+        EntityData
+        EventQueue
+        ExplosionEvent
+        HandItems
+        ItemStack
+        JobInfo
+        KeyEvent
+        MinescriptRuntimeOptions
+        MouseEvent
+        Rotations
+        TakeItemEvent
+        TargetedBlock
+        VersionInfo
+        WorldInfo
+    minescript_runtime.BasicTask(builtins.object)
+        Task
+
+    class AddEntityEvent(builtins.object)
+     |  AddEntityEvent(type: str, time: float, entity: minescript.EntityData) -> None
+     |
+     |  AddEntityEvent(type: str, time: float, entity: minescript.EntityData)
+     |
+     |  Methods defined here:
+     |
+     |  __eq__(self, other)
+     |      Return self==value.
+     |
+     |  __init__(self, type: str, time: float, entity: minescript.EntityData) -> None
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |
+     |  __replace__ = _replace(self, /, **changes) from dataclasses
+     |
+     |  __repr__(self)
+     |      Return repr(self).
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+     |
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |
+     |  __annotations__ = {'entity': <class 'minescript.EntityData'>, 'time': ...
+     |
+     |  __dataclass_fields__ = {'entity': Field(name='entity',type=<class 'min...
+     |
+     |  __dataclass_params__ = _DataclassParams(init=True,repr=True,eq=True,or...
+     |
+     |  __hash__ = None
+     |
+     |  __match_args__ = ('type', 'time', 'entity')
+
+    class BlockPack(builtins.object)
+     |  BlockPack(java_generated_id: int)
+     |
+     |  BlockPack is an immutable and serializable collection of blocks.
+     |
+     |  A blockpack can be read from or written to worlds, files, and serialized
+     |  bytes. Although blockpacks are immutable and preserve position and
+     |  orientation of blocks, they can be rotated and offset when read from or
+     |  written to worlds.
+     |
+     |  For a mutable collection of blocks, see `BlockPacker`.
+     |
+     |  Since: v3.0
+     |
+     |  Methods defined here:
+     |
+     |  __del__(self)
+     |      Frees this BlockPack to be garbage collected.
+     |
+     |  __init__(self, java_generated_id: int)
+     |      Do not call the constructor directly. Use factory classmethods instead.
+     |
+     |      (__internal__)
+     |
+     |  block_bounds(self) -> (typing.Tuple[int, int, int], typing.Tuple[int, int, int])
+     |      Returns min and max bounding coordinates of blocks in this BlockPack.
+     |
+     |  comments(self) -> Dict[str, str]
+     |      Returns comments stored in this BlockPack.
+     |
+     |  export_data(self) -> str
+     |      Serializes this BlockPack into a base64-encoded string.
+     |
+     |      Returns:
+     |        a base64-encoded string containing this blockpack's data
+     |
+     |  write_file(self, filename: str, *, relative_to_cwd=False)
+     |      Writes this BlockPack to a file.
+     |
+     |      Args:
+     |        filename: name of file relative to minescript/blockpacks dir unless it's an absolute path
+     |          (".zip" is automatically appended to filename if it does not end with that extension)
+     |        relative_to_cwd: if `True`, relative filename is taken to be relative to Minecraft dir
+     |
+     |  write_world(
+     |      self,
+     |      *,
+     |      rotation: Tuple[int, int, int, int, int, int, int, int, int] = None,
+     |      offset: Tuple[int, int, int] = None
+     |  )
+     |      Writes blocks from this BlockPack into the current world. Requires setblock, fill commands.
+     |
+     |      Args:
+     |        rotation: rotation matrix to apply to block coordinates before writing to world
+     |        offset: offset to apply to block coordiantes (applied after rotation)
+     |
+     |  ----------------------------------------------------------------------
+     |  Class methods defined here:
+     |
+     |  import_data(base64_data: str) -> 'BlockPack'
+     |      Creates a blockpack from base64-encoded serialized blockpack data.
+     |
+     |      Args:
+     |        base64_data: base64-encoded string containing serialization of blockpack data.
+     |
+     |      Returns:
+     |        a new BlockPack containing blocks read from the base64-encoded data
+     |
+     |  read_file(filename: str, *, relative_to_cwd=False) -> 'BlockPack'
+     |      Reads a blockpack from a file.
+     |
+     |      Args:
+     |        filename: name of file relative to minescript/blockpacks dir unless it's an absolute path
+     |          (".zip" is automatically appended to filename if it does not end with that extension)
+     |        relative_to_cwd: if `True`, relative filename is taken to be relative to Minecraft dir
+     |
+     |      Returns:
+     |        a new BlockPack containing blocks read from the file
+     |
+     |  read_world(
+     |      pos1: Tuple[int, int, int],
+     |      pos2: Tuple[int, int, int],
+     |      *,
+     |      rotation: Tuple[int, int, int, int, int, int, int, int, int] = None,
+     |      offset: Tuple[int, int, int] = None,
+     |      comments: Dict[str, str] = {},
+     |      safety_limit: bool = True
+     |  ) -> 'BlockPack'
+     |      Creates a blockpack from blocks in the world within a rectangular volume.
+     |
+     |      Args:
+     |        pos1, pos2: opposing corners of a rectangular volume from which to read world blocks
+     |        rotation: rotation matrix to apply to block coordinates read from world
+     |        offset: offset to apply to block coordiantes (applied after rotation)
+     |        comments: key, value pairs to include in the new blockpack
+     |        safety_limit: if `True`, fail if requested volume spans more than 1600 chunks
+     |
+     |      Returns:
+     |        a new BlockPack containing blocks read from the world
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+
+    class BlockPacker(builtins.object)
+     |  BlockPacker is a mutable collection of blocks.
+     |
+     |  Blocks can be added to a blockpacker by calling `setblock(...)`, `fill(...)`,
+     |  and/or `add_blockpack(...)`.  To serialize blocks or write them to a world, a
+     |  blockpacker can be "packed" by calling pack() to create a compact snapshot of
+     |  the blocks contained in the blockpacker in the form of a new BlockPack. A
+     |  blockpacker continues to store the same blocks it had before being packed,
+     |  and more blocks can be added thereafter.
+     |
+     |  For a collection of blocks that is immutable and serializable, see `BlockPack`.
+     |
+     |  Since: v3.0
+     |
+     |  Methods defined here:
+     |
+     |  __del__(self)
+     |      Frees this BlockPacker to be garbage collected.
+     |
+     |  __init__(self)
+     |      Creates a new, empty blockpacker.
+     |
+     |  add_blockpack(
+     |      self,
+     |      blockpack: minescript.BlockPack,
+     |      *,
+     |      rotation: Tuple[int, int, int, int, int, int, int, int, int] = None,
+     |      offset: Tuple[int, int, int] = None
+     |  )
+     |      Adds the blocks within a BlockPack into this BlockPacker.
+     |
+     |      Args:
+     |        blockpack: BlockPack from which to copy blocks
+     |        rotation: rotation matrix to apply to block coordinates before adding to blockpacker
+     |        offset: offset to apply to block coordiantes (applied after rotation)
+     |
+     |  fill(
+     |      self,
+     |      pos1: Tuple[int, int, int],
+     |      pos2: Tuple[int, int, int],
+     |      block_type: str
+     |  )
+     |      Fills blocks within this BlockPacker.
+     |
+     |      Args:
+     |        pos1, pos2: coordinates of opposing corners of a rectangular volume to fill
+     |        block_type: block descriptor to fill
+     |
+     |      Raises:
+     |        `BlockPackerException` if blockpacker operation fails
+     |
+     |  pack(self, *, comments: Dict[str, str] = {}) -> minescript.BlockPack
+     |      Packs blocks within this BlockPacker into a new BlockPack.
+     |
+     |      Args:
+     |        comments: key, value pairs to include in the new BlockPack
+     |
+     |      Returns:
+     |        a new BlockPack containing a snapshot of blocks from this BlockPacker
+     |
+     |  setblock(self, pos: Tuple[int, int, int], block_type: str)
+     |      Sets a block within this BlockPacker.
+     |
+     |      Args:
+     |        pos: position of a block to set
+     |        block_type: block descriptor to set
+     |
+     |      Raises:
+     |        `BlockPackerException` if blockpacker operation fails
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+
+    class BlockPackerException(builtins.Exception)
+     |  Method resolution order:
+     |      BlockPackerException
+     |      builtins.Exception
+     |      builtins.BaseException
+     |      builtins.object
+     |
+     |  Data descriptors defined here:
+     |
+     |  __weakref__
+     |      list of weak references to the object
+     |
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from builtins.Exception:
+     |
+     |  __init__(self, /, *args, **kwargs)
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |
+     |  ----------------------------------------------------------------------
+     |  Static methods inherited from builtins.Exception:
+     |
+     |  __new__(*args, **kwargs) class method of builtins.Exception
+     |      Create and return a new object.  See help(type) for accurate signature.
+     |
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from builtins.BaseException:
+     |
+     |  __getattribute__(self, name, /)
+     |      Return getattr(self, name).
+     |
+     |  __reduce__(self, /)
+     |      Helper for pickle.
+     |
+     |  __repr__(self, /)
+     |      Return repr(self).
+     |
+     |  __setstate__(self, object, /)
+     |
+     |  __str__(self, /)
+     |      Return str(self).
+     |
+     |  add_note(self, object, /)
+     |      Exception.add_note(note) --
+     |      add a note to the exception
+     |
+     |  with_traceback(self, object, /)
+     |      Exception.with_traceback(tb) --
+     |      set self.__traceback__ to tb and return self.
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from builtins.BaseException:
+     |
+     |  __cause__
+     |      exception cause
+     |
+     |  __context__
+     |      exception context
+     |
+     |  __dict__
+     |
+     |  __suppress_context__
+     |
+     |  __traceback__
+     |
+     |  args
+
+    class BlockUpdateEvent(builtins.object)
+     |  BlockUpdateEvent(
+     |      type: str,
+     |      time: float,
+     |      position: Tuple[int, int, int],
+     |      old_state: str,
+     |      new_state: str
+     |  ) -> None
+     |
+     |  BlockUpdateEvent(type: str, time: float, position: Tuple[int, int, int], old_state: str, new_state: str)
+     |
+     |  Methods defined here:
+     |
+     |  __eq__(self, other)
+     |      Return self==value.
+     |
+     |  __init__(
+     |      self,
+     |      type: str,
+     |      time: float,
+     |      position: Tuple[int, int, int],
+     |      old_state: str,
+     |      new_state: str
+     |  ) -> None
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |
+     |  __replace__ = _replace(self, /, **changes) from dataclasses
+     |
+     |  __repr__(self)
+     |      Return repr(self).
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+     |
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |
+     |  __annotations__ = {'new_state': <class 'str'>, 'old_state': <class 'st...
+     |
+     |  __dataclass_fields__ = {'new_state': Field(name='new_state',type=<clas...
+     |
+     |  __dataclass_params__ = _DataclassParams(init=True,repr=True,eq=True,or...
+     |
+     |  __hash__ = None
+     |
+     |  __match_args__ = ('type', 'time', 'position', 'old_state', 'new_state'...
+
+    class ChatEvent(builtins.object)
+     |  ChatEvent(type: str, time: float, message: str) -> None
+     |
+     |  ChatEvent(type: str, time: float, message: str)
+     |
+     |  Methods defined here:
+     |
+     |  __eq__(self, other)
+     |      Return self==value.
+     |
+     |  __init__(self, type: str, time: float, message: str) -> None
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |
+     |  __replace__ = _replace(self, /, **changes) from dataclasses
+     |
+     |  __repr__(self)
+     |      Return repr(self).
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+     |
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |
+     |  __annotations__ = {'message': <class 'str'>, 'time': <class 'float'>, ...
+     |
+     |  __dataclass_fields__ = {'message': Field(name='message',type=<class 's...
+     |
+     |  __dataclass_params__ = _DataclassParams(init=True,repr=True,eq=True,or...
+     |
+     |  __hash__ = None
+     |
+     |  __match_args__ = ('type', 'time', 'message')
+
+    class ChunkEvent(builtins.object)
+     |  ChunkEvent(
+     |      type: str,
+     |      time: float,
+     |      loaded: bool,
+     |      x_min: int,
+     |      z_min: int,
+     |      x_max: int,
+     |      z_max: int
+     |  ) -> None
+     |
+     |  ChunkEvent(type: str, time: float, loaded: bool, x_min: int, z_min: int, x_max: int, z_max: int)
+     |
+     |  Methods defined here:
+     |
+     |  __eq__(self, other)
+     |      Return self==value.
+     |
+     |  __init__(
+     |      self,
+     |      type: str,
+     |      time: float,
+     |      loaded: bool,
+     |      x_min: int,
+     |      z_min: int,
+     |      x_max: int,
+     |      z_max: int
+     |  ) -> None
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |
+     |  __replace__ = _replace(self, /, **changes) from dataclasses
+     |
+     |  __repr__(self)
+     |      Return repr(self).
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+     |
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |
+     |  __annotations__ = {'loaded': <class 'bool'>, 'time': <class 'float'>, ...
+     |
+     |  __dataclass_fields__ = {'loaded': Field(name='loaded',type=<class 'boo...
+     |
+     |  __dataclass_params__ = _DataclassParams(init=True,repr=True,eq=True,or...
+     |
+     |  __hash__ = None
+     |
+     |  __match_args__ = ('type', 'time', 'loaded', 'x_min', 'z_min', 'x_max',...
+
+    class DamageEvent(builtins.object)
+     |  DamageEvent(
+     |      type: str,
+     |      time: float,
+     |      entity_uuid: str,
+     |      cause_uuid: str,
+     |      source: str
+     |  ) -> None
+     |
+     |  DamageEvent(type: str, time: float, entity_uuid: str, cause_uuid: str, source: str)
+     |
+     |  Methods defined here:
+     |
+     |  __eq__(self, other)
+     |      Return self==value.
+     |
+     |  __init__(
+     |      self,
+     |      type: str,
+     |      time: float,
+     |      entity_uuid: str,
+     |      cause_uuid: str,
+     |      source: str
+     |  ) -> None
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |
+     |  __replace__ = _replace(self, /, **changes) from dataclasses
+     |
+     |  __repr__(self)
+     |      Return repr(self).
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+     |
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |
+     |  __annotations__ = {'cause_uuid': <class 'str'>, 'entity_uuid': <class ...
+     |
+     |  __dataclass_fields__ = {'cause_uuid': Field(name='cause_uuid',type=<cl...
+     |
+     |  __dataclass_params__ = _DataclassParams(init=True,repr=True,eq=True,or...
+     |
+     |  __hash__ = None
+     |
+     |  __match_args__ = ('type', 'time', 'entity_uuid', 'cause_uuid', 'source...
+
+    class EntityData(builtins.object)
+     |  EntityData(
+     |      name: str,
+     |      type: str,
+     |      uuid: str,
+     |      id: int,
+     |      position: Tuple[float, float, float],
+     |      yaw: float,
+     |      pitch: float,
+     |      velocity: Tuple[float, float, float],
+     |      lerp_position: Tuple[float, float, float] = None,
+     |      health: float = None,
+     |      local: bool = None,
+     |      passengers: List[str] = None,
+     |      nbt: Dict[str, Any] = None
+     |  ) -> None
+     |
+     |  EntityData(name: str, type: str, uuid: str, id: int, position: Tuple[float, float, float], yaw: float, pitch: float, velocity: Tuple[float, float, float], lerp_position: Tuple[float, float, float] = None, health: float = None, local: bool = None, passengers: List[str] = None, nbt: Dict[str, Any] = None)
+     |
+     |  Methods defined here:
+     |
+     |  __eq__(self, other)
+     |      Return self==value.
+     |
+     |  __init__(
+     |      self,
+     |      name: str,
+     |      type: str,
+     |      uuid: str,
+     |      id: int,
+     |      position: Tuple[float, float, float],
+     |      yaw: float,
+     |      pitch: float,
+     |      velocity: Tuple[float, float, float],
+     |      lerp_position: Tuple[float, float, float] = None,
+     |      health: float = None,
+     |      local: bool = None,
+     |      passengers: List[str] = None,
+     |      nbt: Dict[str, Any] = None
+     |  ) -> None
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |
+     |  __replace__ = _replace(self, /, **changes) from dataclasses
+     |
+     |  __repr__(self)
+     |      Return repr(self).
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+     |
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |
+     |  __annotations__ = {'health': <class 'float'>, 'id': <class 'int'>, 'le...
+     |
+     |  __dataclass_fields__ = {'health': Field(name='health',type=<class 'flo...
+     |
+     |  __dataclass_params__ = _DataclassParams(init=True,repr=True,eq=True,or...
+     |
+     |  __hash__ = None
+     |
+     |  __match_args__ = ('name', 'type', 'uuid', 'id', 'position', 'yaw', 'pi...
+     |
+     |  health = None
+     |
+     |  lerp_position = None
+     |
+     |  local = None
+     |
+     |  nbt = None
+     |
+     |  passengers = None
+
+    class EventQueue(builtins.object)
+     |  Queue for managing events.
+     |
+     |  Implements context management so that it can be used with a `with` expression
+     |  to automatically unregister event listeners at the end of the block, e.g.
+     |
+     |  ```
+     |  with EventQueue() as event_queue:
+     |    event_queue.register_chat_listener()
+     |    while True:
+     |      event = event_queue.get()
+     |      if event.type == EventType.CHAT and "knock knock" in event.message.lower():
+     |        echo("Who's there?")
+     |  ```
+     |
+     |  Since: v4.0
+     |
+     |  Methods defined here:
+     |
+     |  __del__(self)
+     |
+     |  __enter__(self)
+     |
+     |  __exit__(self, exc_type, exc_val, exc_tb)
+     |
+     |  __init__(self)
+     |      Creates an event registration handler.
+     |
+     |  get(self, block: bool = True, timeout: float = None) -> Any
+     |      Gets the next event in the queue.
+     |
+     |      Args:
+     |        block: if `True`, block until an event fires
+     |        timeout: timeout in seconds to wait for an event if `block` is `True`
+     |
+     |      Returns:
+     |        subclass-dependent event
+     |
+     |      Raises:
+     |        `queue.Empty` if `block` is `True` and `timeout` expires, or `block` is `False` and
+     |        queue is empty.
+     |
+     |  register_add_entity_listener(self)
+     |      Registers listener for `EventType.ADD_ENTITY` events as `AddEntityEvent`.
+     |
+     |      Example:
+     |      ```
+     |        with EventQueue() as event_queue:
+     |          event_queue.register_add_entity_listener()
+     |          while True:
+     |            event = event_queue.get()
+     |            if event.type == EventType.ADD_ENTITY:
+     |              echo(f"Entity added: {event.entity.name}")
+     |      ```
+     |
+     |  register_block_update_listener(self)
+     |      Registers listener for `EventType.BLOCK_UPDATE` events as `BlockUpdateEvent`.
+     |
+     |      Example:
+     |      ```
+     |        with EventQueue() as event_queue:
+     |          event_queue.register_block_update_listener()
+     |          while True:
+     |            event = event_queue.get()
+     |            if event.type == EventType.BLOCK_UPDATE:
+     |              echo(f"Block updated at {event.position} to {event.new_state}")
+     |      ```
+     |
+     |  register_chat_listener(self)
+     |      Registers listener for `EventType.CHAT` events as `ChatEvent`.
+     |
+     |      Example:
+     |      ```
+     |        with EventQueue() as event_queue:
+     |          event_queue.register_chat_listener()
+     |          while True:
+     |            event = event_queue.get()
+     |            if event.type == EventType.CHAT:
+     |              if not event.message.startswith("> "):
+     |                echo(f"> Got chat message: {event.message}")
+     |      ```
+     |
+     |  register_chunk_listener(self)
+     |      Registers listener for `EventType.CHUNK` events as `ChunkEvent`.
+     |
+     |      Example:
+     |      ```
+     |        with EventQueue() as event_queue:
+     |          event_queue.register_chunk_listener()
+     |          while True:
+     |            event = event_queue.get()
+     |            if event.type == EventType.CHUNK:
+     |              x = event.x_min
+     |              z = event.z_min
+     |              echo(f"Chunk {'loaded' if event.loaded else 'unloaded'} at {x}, {z}")
+     |      ```
+     |
+     |  register_damage_listener(self)
+     |      Registers listener for `EventType.DAMAGE` events as `DamageEvent`.
+     |
+     |      Example:
+     |      ```
+     |        with EventQueue() as event_queue:
+     |          event_queue.register_damage_listener()
+     |          while True:
+     |            event = event_queue.get()
+     |            if event.type == EventType.DAMAGE:
+     |              echo(f"Damage from {event.source}")
+     |      ```
+     |
+     |  register_explosion_listener(self)
+     |      Registers listener for `EventType.EXPLOSION` events as `ExplosionEvent`.
+     |
+     |      Example:
+     |      ```
+     |        with EventQueue() as event_queue:
+     |          event_queue.register_explosion_listener()
+     |          while True:
+     |            event = event_queue.get()
+     |            if event.type == EventType.EXPLOSION:
+     |              echo(f"Explosion at {event.position}")
+     |      ```
+     |
+     |  register_key_listener(self)
+     |      Registers listener for `EventType.KEY` events as `KeyEvent`.
+     |
+     |      Example:
+     |      ```
+     |        with EventQueue() as event_queue:
+     |          event_queue.register_key_listener()
+     |          while True:
+     |            event = event_queue.get()
+     |            if event.type == EventType.KEY:
+     |              if event.action == 0:
+     |                action = 'up'
+     |              elif event.action == 1:
+     |                action = 'down'
+     |              else:
+     |                action = 'repeat'
+     |              echo(f"Got key {action} with code {event.key}")
+     |      ```
+     |
+     |  register_mouse_listener(self)
+     |      Registers listener for `EventType.MOUSE` events as `MouseEvent`.
+     |
+     |      Example:
+     |      ```
+     |        with EventQueue() as event_queue:
+     |          event_queue.register_mouse_listener()
+     |          while True:
+     |            event = event_queue.get()
+     |            if event.type == EventType.MOUSE:
+     |              echo(f"Got mouse {'up' if event.action == 0 else 'down'} of button {event.button}")
+     |      ```
+     |
+     |  register_outgoing_chat_interceptor(
+     |      self,
+     |      *,
+     |      prefix: str = None,
+     |      pattern: str = None
+     |  )
+     |      Registers listener for `EventType.OUTGOING_CHAT_INTERCEPT` events as `ChatEvent`.
+     |
+     |      Intercepts outgoing chat messages from the local player. Interception can be restricted to
+     |      messages matching `prefix` or `pattern`. Intercepted messages can be chatted with `chat()`.
+     |
+     |      `prefix` or `pattern` can be specified, but not both. If neither `prefix` nor
+     |      `pattern` is specified, all outgoing chat messages are intercepted.
+     |
+     |      Args:
+     |        prefix: if specified, intercept only the messages starting with this literal prefix
+     |        pattern: if specified, intercept only the messages matching this regular expression
+     |
+     |      Example:
+     |      ```
+     |        with EventQueue() as event_queue:
+     |          event_queue.register_outgoing_chat_interceptor(pattern=".*%p.*")
+     |          while True:
+     |            event = event_queue.get()
+     |            if event.type == EventType.OUTGOING_CHAT_INTERCEPT:
+     |              # Replace "%p" in outgoing chats with your current position.
+     |              chat(event.message.replace("%p", str(player().position)))
+     |      ```
+     |
+     |  register_take_item_listener(self)
+     |      Registers listener for `EventType.TAKE_ITEM` events as `TakeItemEvent`.
+     |
+     |      Example:
+     |      ```
+     |        with EventQueue() as event_queue:
+     |          event_queue.register_take_item_listener()
+     |          while True:
+     |            event = event_queue.get()
+     |            if event.type == EventType.TAKE_ITEM:
+     |              echo(f"Item taken: {event.item.type}")
+     |      ```
+     |
+     |  unregister_all(self)
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+
+    class ExplosionEvent(builtins.object)
+     |  ExplosionEvent(
+     |      type: str,
+     |      time: float,
+     |      position: Tuple[float, float, float],
+     |      blockpack_base64: str
+     |  ) -> None
+     |
+     |  ExplosionEvent(type: str, time: float, position: Tuple[float, float, float], blockpack_base64: str)
+     |
+     |  Methods defined here:
+     |
+     |  __eq__(self, other)
+     |      Return self==value.
+     |
+     |  __init__(
+     |      self,
+     |      type: str,
+     |      time: float,
+     |      position: Tuple[float, float, float],
+     |      blockpack_base64: str
+     |  ) -> None
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |
+     |  __replace__ = _replace(self, /, **changes) from dataclasses
+     |
+     |  __repr__(self)
+     |      Return repr(self).
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+     |
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |
+     |  __annotations__ = {'blockpack_base64': <class 'str'>, 'position': typi...
+     |
+     |  __dataclass_fields__ = {'blockpack_base64': Field(name='blockpack_base...
+     |
+     |  __dataclass_params__ = _DataclassParams(init=True,repr=True,eq=True,or...
+     |
+     |  __hash__ = None
+     |
+     |  __match_args__ = ('type', 'time', 'position', 'blockpack_base64')
+
+    class HandItems(builtins.object)
+     |  HandItems(main_hand: minescript.ItemStack, off_hand: minescript.ItemStack) -> None
+     |
+     |  HandItems(main_hand: minescript.ItemStack, off_hand: minescript.ItemStack)
+     |
+     |  Methods defined here:
+     |
+     |  __eq__(self, other)
+     |      Return self==value.
+     |
+     |  __init__(self, main_hand: minescript.ItemStack, off_hand: minescript.ItemStack) -> None
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |
+     |  __replace__ = _replace(self, /, **changes) from dataclasses
+     |
+     |  __repr__(self)
+     |      Return repr(self).
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+     |
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |
+     |  __annotations__ = {'main_hand': <class 'minescript.ItemStack'>, 'off_h...
+     |
+     |  __dataclass_fields__ = {'main_hand': Field(name='main_hand',type=<clas...
+     |
+     |  __dataclass_params__ = _DataclassParams(init=True,repr=True,eq=True,or...
+     |
+     |  __hash__ = None
+     |
+     |  __match_args__ = ('main_hand', 'off_hand')
+
+    class ItemStack(builtins.object)
+     |  ItemStack(
+     |      item: str,
+     |      count: int,
+     |      nbt: str = None,
+     |      slot: int = None,
+     |      selected: bool = None
+     |  ) -> None
+     |
+     |  ItemStack(item: str, count: int, nbt: str = None, slot: int = None, selected: bool = None)
+     |
+     |  Methods defined here:
+     |
+     |  __eq__(self, other)
+     |      Return self==value.
+     |
+     |  __init__(
+     |      self,
+     |      item: str,
+     |      count: int,
+     |      nbt: str = None,
+     |      slot: int = None,
+     |      selected: bool = None
+     |  ) -> None
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |
+     |  __replace__ = _replace(self, /, **changes) from dataclasses
+     |
+     |  __repr__(self)
+     |      Return repr(self).
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+     |
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |
+     |  __annotations__ = {'count': <class 'int'>, 'item': <class 'str'>, 'nbt...
+     |
+     |  __dataclass_fields__ = {'count': Field(name='count',type=<class 'int'>...
+     |
+     |  __dataclass_params__ = _DataclassParams(init=True,repr=True,eq=True,or...
+     |
+     |  __hash__ = None
+     |
+     |  __match_args__ = ('item', 'count', 'nbt', 'slot', 'selected')
+     |
+     |  nbt = None
+     |
+     |  selected = None
+     |
+     |  slot = None
+
+    class JobInfo(builtins.object)
+     |  JobInfo(
+     |      job_id: int,
+     |      command: List[str],
+     |      source: str,
+     |      status: str,
+     |      self: bool = False
+     |  ) -> None
+     |
+     |  JobInfo(job_id: int, command: List[str], source: str, status: str, self: bool = False)
+     |
+     |  Methods defined here:
+     |
+     |  __eq__(self, other)
+     |      Return self==value.
+     |
+     |  __init__(
+     |      __dataclass_self__,
+     |      job_id: int,
+     |      command: List[str],
+     |      source: str,
+     |      status: str,
+     |      self: bool = False
+     |  ) -> None
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |
+     |  __replace__ = _replace(self, /, **changes) from dataclasses
+     |
+     |  __repr__(self)
+     |      Return repr(self).
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+     |
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |
+     |  __annotations__ = {'command': typing.List[str], 'job_id': <class 'int'...
+     |
+     |  __dataclass_fields__ = {'command': Field(name='command',type=typing.Li...
+     |
+     |  __dataclass_params__ = _DataclassParams(init=True,repr=True,eq=True,or...
+     |
+     |  __hash__ = None
+     |
+     |  __match_args__ = ('job_id', 'command', 'source', 'status', 'self')
+     |
+     |  self = False
+
+    class KeyEvent(builtins.object)
+     |  KeyEvent(
+     |      type: str,
+     |      time: float,
+     |      key: int,
+     |      scan_code: int,
+     |      action: int,
+     |      modifiers: int,
+     |      screen: str
+     |  ) -> None
+     |
+     |  Key event data.
+     |
+     |  For a list of key codes, see: https://www.glfw.org/docs/3.4/group__keys.html
+     |  `action` is 0 for key up, 1 for key down, and 2 for key repeat.
+     |
+     |  Methods defined here:
+     |
+     |  __eq__(self, other)
+     |      Return self==value.
+     |
+     |  __init__(
+     |      self,
+     |      type: str,
+     |      time: float,
+     |      key: int,
+     |      scan_code: int,
+     |      action: int,
+     |      modifiers: int,
+     |      screen: str
+     |  ) -> None
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |
+     |  __replace__ = _replace(self, /, **changes) from dataclasses
+     |
+     |  __repr__(self)
+     |      Return repr(self).
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+     |
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |
+     |  __annotations__ = {'action': <class 'int'>, 'key': <class 'int'>, 'mod...
+     |
+     |  __dataclass_fields__ = {'action': Field(name='action',type=<class 'int...
+     |
+     |  __dataclass_params__ = _DataclassParams(init=True,repr=True,eq=True,or...
+     |
+     |  __hash__ = None
+     |
+     |  __match_args__ = ('type', 'time', 'key', 'scan_code', 'action', 'modif...
+
+    class MinescriptRuntimeOptions(builtins.object)
+     |  MinescriptRuntimeOptions(legacy_dict_return_values: bool = False) -> None
+     |
+     |  MinescriptRuntimeOptions(legacy_dict_return_values: bool = False)
+     |
+     |  Methods defined here:
+     |
+     |  __eq__(self, other)
+     |      Return self==value.
+     |
+     |  __init__(self, legacy_dict_return_values: bool = False) -> None
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |
+     |  __replace__ = _replace(self, /, **changes) from dataclasses
+     |
+     |  __repr__(self)
+     |      Return repr(self).
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+     |
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |
+     |  __annotations__ = {'legacy_dict_return_values': <class 'bool'>}
+     |
+     |  __dataclass_fields__ = {'legacy_dict_return_values': Field(name='legac...
+     |
+     |  __dataclass_params__ = _DataclassParams(init=True,repr=True,eq=True,or...
+     |
+     |  __hash__ = None
+     |
+     |  __match_args__ = ('legacy_dict_return_values',)
+     |
+     |  legacy_dict_return_values = False
+
+    class MouseEvent(builtins.object)
+     |  MouseEvent(
+     |      type: str,
+     |      time: float,
+     |      button: int,
+     |      action: int,
+     |      modifiers: int,
+     |      x: float,
+     |      y: float,
+     |      screen: str = None
+     |  ) -> None
+     |
+     |  Mouse event data.
+     |
+     |  `action` is 0 for mouse up and 1 for mouse down.
+     |
+     |  Methods defined here:
+     |
+     |  __eq__(self, other)
+     |      Return self==value.
+     |
+     |  __init__(
+     |      self,
+     |      type: str,
+     |      time: float,
+     |      button: int,
+     |      action: int,
+     |      modifiers: int,
+     |      x: float,
+     |      y: float,
+     |      screen: str = None
+     |  ) -> None
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |
+     |  __replace__ = _replace(self, /, **changes) from dataclasses
+     |
+     |  __repr__(self)
+     |      Return repr(self).
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+     |
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |
+     |  __annotations__ = {'action': <class 'int'>, 'button': <class 'int'>, '...
+     |
+     |  __dataclass_fields__ = {'action': Field(name='action',type=<class 'int...
+     |
+     |  __dataclass_params__ = _DataclassParams(init=True,repr=True,eq=True,or...
+     |
+     |  __hash__ = None
+     |
+     |  __match_args__ = ('type', 'time', 'button', 'action', 'modifiers', 'x'...
+     |
+     |  screen = None
+
+    class Rotations(builtins.object)
+     |  Common rotations for use with `BlockPack` and `BlockPacker` methods.
+     |
+     |  Since: v3.0
+     |
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+     |
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |
+     |  IDENTITY = (1, 0, 0, 0, 1, 0, 0, 0, 1)
+     |
+     |  INVERT_X = (-1, 0, 0, 0, 1, 0, 0, 0, 1)
+     |
+     |  INVERT_Y = (1, 0, 0, 0, -1, 0, 0, 0, 1)
+     |
+     |  INVERT_Z = (1, 0, 0, 0, 1, 0, 0, 0, -1)
+     |
+     |  X_180 = (1, 0, 0, 0, -1, 0, 0, 0, -1)
+     |
+     |  X_270 = (1, 0, 0, 0, 0, -1, 0, 1, 0)
+     |
+     |  X_90 = (1, 0, 0, 0, 0, 1, 0, -1, 0)
+     |
+     |  Y_180 = (-1, 0, 0, 0, 1, 0, 0, 0, -1)
+     |
+     |  Y_270 = (0, 0, -1, 0, 1, 0, 1, 0, 0)
+     |
+     |  Y_90 = (0, 0, 1, 0, 1, 0, -1, 0, 0)
+     |
+     |  Z_180 = (-1, 0, 0, 0, -1, 0, 0, 0, 1)
+     |
+     |  Z_270 = (0, -1, 0, 1, 0, 0, 0, 0, 1)
+     |
+     |  Z_90 = (0, 1, 0, -1, 0, 0, 0, 0, 1)
+     |
+     |  __annotations__ = {'IDENTITY': typing.Tuple[int, int, int, int, int, i...
+
+    class TakeItemEvent(builtins.object)
+     |  TakeItemEvent(
+     |      type: str,
+     |      time: float,
+     |      player_uuid: str,
+     |      item: minescript.EntityData,
+     |      amount: int
+     |  ) -> None
+     |
+     |  TakeItemEvent(type: str, time: float, player_uuid: str, item: minescript.EntityData, amount: int)
+     |
+     |  Methods defined here:
+     |
+     |  __eq__(self, other)
+     |      Return self==value.
+     |
+     |  __init__(
+     |      self,
+     |      type: str,
+     |      time: float,
+     |      player_uuid: str,
+     |      item: minescript.EntityData,
+     |      amount: int
+     |  ) -> None
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |
+     |  __replace__ = _replace(self, /, **changes) from dataclasses
+     |
+     |  __repr__(self)
+     |      Return repr(self).
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+     |
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |
+     |  __annotations__ = {'amount': <class 'int'>, 'item': <class 'minescript...
+     |
+     |  __dataclass_fields__ = {'amount': Field(name='amount',type=<class 'int...
+     |
+     |  __dataclass_params__ = _DataclassParams(init=True,repr=True,eq=True,or...
+     |
+     |  __hash__ = None
+     |
+     |  __match_args__ = ('type', 'time', 'player_uuid', 'item', 'amount')
+
+    class TargetedBlock(builtins.object)
+     |  TargetedBlock(
+     |      position: Tuple[int, int, int],
+     |      distance: float,
+     |      side: str,
+     |      type: str
+     |  ) -> None
+     |
+     |  TargetedBlock(position: Tuple[int, int, int], distance: float, side: str, type: str)
+     |
+     |  Methods defined here:
+     |
+     |  __eq__(self, other)
+     |      Return self==value.
+     |
+     |  __getitem__(self, i)
+     |      # __getitem__ provided for backward compatibility with the list returned in prior versions.
+     |
+     |  __init__(
+     |      self,
+     |      position: Tuple[int, int, int],
+     |      distance: float,
+     |      side: str,
+     |      type: str
+     |  ) -> None
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |
+     |  __replace__ = _replace(self, /, **changes) from dataclasses
+     |
+     |  __repr__(self)
+     |      Return repr(self).
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+     |
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |
+     |  __annotations__ = {'distance': <class 'float'>, 'position': typing.Tup...
+     |
+     |  __dataclass_fields__ = {'distance': Field(name='distance',type=<class ...
+     |
+     |  __dataclass_params__ = _DataclassParams(init=True,repr=True,eq=True,or...
+     |
+     |  __hash__ = None
+     |
+     |  __match_args__ = ('position', 'distance', 'side', 'type')
+
+    class Task(minescript_runtime.BasicTask)
+     |  Task(
+     |      fcallid: int,
+     |      func_name: str,
+     |      immediate_args: Tuple[Any, ...],
+     |      deferred_args: Tuple[Any, ...],
+     |      result_transform: Callable[[Any], Any] = <function <lambda> at 0x00000288F7318360>
+     |  ) -> None
+     |
+     |  Executable task that allows multiple operations to execute on the same executor cycle.
+     |
+     |  Method resolution order:
+     |      Task
+     |      minescript_runtime.BasicTask
+     |      builtins.object
+     |
+     |  Methods defined here:
+     |
+     |  __eq__(self, other)
+     |      Return self==value.
+     |
+     |  __init__(
+     |      self,
+     |      fcallid: int,
+     |      func_name: str,
+     |      immediate_args: Tuple[Any, ...],
+     |      deferred_args: Tuple[Any, ...],
+     |      result_transform: Callable[[Any], Any] = <function <lambda> at 0x00000288F7318360>
+     |  ) -> None
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |
+     |  __replace__ = _replace(self, /, **changes) from dataclasses
+     |
+     |  __repr__(self)
+     |      Return repr(self).
+     |
+     |  ----------------------------------------------------------------------
+     |  Static methods defined here:
+     |
+     |  as_int(*numbers)
+     |      Creates a task that converts a floating-point number to int.
+     |
+     |  as_list(*values)
+     |      Creates a task that returns the given values as a list.
+     |
+     |  contains(container, element)
+     |      Creates a task that checks if a container (map, list, or string) contains an element.
+     |
+     |  get_attr(obj, attr)
+     |      Creates a task that looks up a map/dict by key.
+     |
+     |  get_index(array, index)
+     |      Creates a task that looks up an array by index.
+     |
+     |  is_null(value)
+     |      Creates a task that checks a value against null or `None`.
+     |
+     |  negate(condition)
+     |      Creates a task that negates a boolean value.
+     |
+     |  skip_if(condition)
+     |      Creates a task that skips the remainder of the task list if `condition` is true.
+     |
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |
+     |  __annotations__ = {}
+     |
+     |  __dataclass_fields__ = {'deferred_args': Field(name='deferred_args',ty...
+     |
+     |  __dataclass_params__ = _DataclassParams(init=True,repr=True,eq=True,or...
+     |
+     |  __hash__ = None
+     |
+     |  __match_args__ = ('fcallid', 'func_name', 'immediate_args', 'deferred_...
+     |
+     |  ----------------------------------------------------------------------
+     |  Methods inherited from minescript_runtime.BasicTask:
+     |
+     |  result_transform lambda x from minescript_runtime
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors inherited from minescript_runtime.BasicTask:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+
+    class VersionInfo(builtins.object)
+     |  VersionInfo(
+     |      minecraft: str,
+     |      minescript: str,
+     |      mod_loader: str,
+     |      launcher: str,
+     |      os_name: str,
+     |      os_version: str,
+     |      minecraft_class_name: str
+     |  ) -> None
+     |
+     |  VersionInfo(minecraft: str, minescript: str, mod_loader: str, launcher: str, os_name: str, os_version: str, minecraft_class_name: str)
+     |
+     |  Methods defined here:
+     |
+     |  __eq__(self, other)
+     |      Return self==value.
+     |
+     |  __init__(
+     |      self,
+     |      minecraft: str,
+     |      minescript: str,
+     |      mod_loader: str,
+     |      launcher: str,
+     |      os_name: str,
+     |      os_version: str,
+     |      minecraft_class_name: str
+     |  ) -> None
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |
+     |  __replace__ = _replace(self, /, **changes) from dataclasses
+     |
+     |  __repr__(self)
+     |      Return repr(self).
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+     |
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |
+     |  __annotations__ = {'launcher': <class 'str'>, 'minecraft': <class 'str...
+     |
+     |  __dataclass_fields__ = {'launcher': Field(name='launcher',type=<class ...
+     |
+     |  __dataclass_params__ = _DataclassParams(init=True,repr=True,eq=True,or...
+     |
+     |  __hash__ = None
+     |
+     |  __match_args__ = ('minecraft', 'minescript', 'mod_loader', 'launcher',...
+
+    class WorldInfo(builtins.object)
+     |  WorldInfo(
+     |      game_ticks: int,
+     |      day_ticks: int,
+     |      raining: bool,
+     |      thundering: bool,
+     |      spawn: Tuple[int, int, int],
+     |      hardcore: bool,
+     |      difficulty: str,
+     |      name: str,
+     |      address: str
+     |  ) -> None
+     |
+     |  WorldInfo(game_ticks: int, day_ticks: int, raining: bool, thundering: bool, spawn: Tuple[int, int, int], hardcore: bool, difficulty: str, name: str, address: str)
+     |
+     |  Methods defined here:
+     |
+     |  __eq__(self, other)
+     |      Return self==value.
+     |
+     |  __init__(
+     |      self,
+     |      game_ticks: int,
+     |      day_ticks: int,
+     |      raining: bool,
+     |      thundering: bool,
+     |      spawn: Tuple[int, int, int],
+     |      hardcore: bool,
+     |      difficulty: str,
+     |      name: str,
+     |      address: str
+     |  ) -> None
+     |      Initialize self.  See help(type(self)) for accurate signature.
+     |
+     |  __replace__ = _replace(self, /, **changes) from dataclasses
+     |
+     |  __repr__(self)
+     |      Return repr(self).
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  __dict__
+     |      dictionary for instance variables
+     |
+     |  __weakref__
+     |      list of weak references to the object
+     |
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |
+     |  __annotations__ = {'address': <class 'str'>, 'day_ticks': <class 'int'...
+     |
+     |  __dataclass_fields__ = {'address': Field(name='address',type=<class 's...
+     |
+     |  __dataclass_params__ = _DataclassParams(init=True,repr=True,eq=True,or...
+     |
+     |  __hash__ = None
+     |
+     |  __match_args__ = ('game_ticks', 'day_ticks', 'raining', 'thundering', ...
+
+FUNCTIONS
+    ChatEventListener()
+        Deprecated listener for chat message events.
+
+        Use `EventQueue.register_chat_message_listener` instead.
+
+        Update in v4.0:
+          Deprecated in favor of `EventQueue.register_chat_message_listener`.
+
+        Since: v3.2
+
+    KeyEventListener()
+        Deprecated listener for keyboard events. Use `EventQueue.register_key_listener` instead.
+
+        Update in v4.0:
+          Deprecated in favor of `EventQueue.register_key_listener`.
+
+        Since: v3.2
+
+    cancel_scheduled_tasks(task_list_id: int)
+        Cancels a scheduled task list for the currently running job.
+
+        Args:
+          task_list_id: ID of task list returned from `schedule_tick_tasks()` or `schedule_render_tasks`.
+
+        Returns:
+          `True` if `task_list_id` was successfully cancelled, `False` otherwise.
+
+        Since: v4.0
+
+    combine_rotations(
+        rot1: Tuple[int, int, int, int, int, int, int, int, int],
+        rot2: Tuple[int, int, int, int, int, int, int, int, int],
+        /
+    ) -> Tuple[int, int, int, int, int, int, int, int, int]
+        Combines two rotation matrices into a single rotation matrix.
+
+        Since: v3.0
+
+    register_add_entity_listener(
+        handler: Callable[[Dict[str, Any]], NoneType],
+        exception_handler: Callable[[Exception], NoneType] = None
+    ) -> int
+        Registers a handler to listen for entities being added.
+
+        For a more user-friendly API, use `EventQueue` instead.  (__internal__)
+
+        Args:
+          handler: callable that repeatedly accepts a dict representing added entities
+          exception_handler: callable for handling an `Exception` thrown from Java (optional)
+
+        Since: v4.0
+
+    register_block_update_listener(
+        handler: Callable[[Dict[str, Any]], NoneType],
+        exception_handler: Callable[[Exception], NoneType] = None
+    ) -> int
+        Registers a handler to listen for block update events.
+
+        For a more user-friendly API, use `EventQueue` instead.  (__internal__)
+
+        Args:
+          handler: callable that repeatedly accepts a dict representing block updates
+          exception_handler: callable for handling an `Exception` thrown from Java (optional)
+
+        Since: v4.0
+
+    register_chat_message_interceptor(
+        handler: Callable[[Dict[str, Any]], NoneType],
+        exception_handler: Callable[[Exception], NoneType] = None,
+        *,
+        prefix: str = None,
+        pattern: str = None
+    ) -> int
+        Registers a handler for swallowing outgoing chat messages matching a prefix or pattern.
+
+        For a more user-friendly API, use `EventQueue` instead.  (__internal__)
+
+        Args:
+          handler: callable that repeatedly accepts chat message events
+          exception_handler: callable for handling an `Exception` thrown from Java (optional)
+          prefix: if specified, intercept only the messages starting with this literal prefix
+          pattern: if specified, intercept only the messages matching this regular expression
+
+        Returns:
+          ID for the new handler.
+
+        Update in v4.0:
+          Support filtering of intercepted messages via `prefix` and `pattern`.
+          Added return value for identifying the newly registered listener.
+
+        Since: v2.1
+
+        See also:
+          `register_chat_message_listener()` for non-destructive listening of chat messages
+
+    register_chat_message_listener(
+        handler: Callable[[Dict[str, Any]], NoneType],
+        exception_handler: Callable[[Exception], NoneType] = None
+    ) -> int
+        Registers a handler to listen for chat messages.
+
+        Handler receives both incoming and outgoing chat messages.
+
+        For a more user-friendly API, use `EventQueue` instead.  (__internal__)
+
+        Args:
+          handler: callable that repeatedly accepts a dict representing chat message events
+          exception_handler: callable for handling an `Exception` thrown from Java (optional)
+
+        Update in v4.0:
+          Added return value for identifying the newly registered handler.
+
+        Update in v3.2:
+          Added optional arg `exception_handler`.
+
+        Since: v2.0
+
+        See also:
+          `register_chat_message_interceptor()` for swallowing outgoing chat messages
+
+    register_chunk_listener(
+        handler: Callable[[Dict[str, Any]], NoneType],
+        exception_handler: Callable[[Exception], NoneType] = None
+    ) -> int
+        Registers a handler to listen for chunk load/unload events.
+
+        For a more user-friendly API, use `EventQueue` instead.  (__internal__)
+
+        Args:
+          handler: callable that repeatedly accepts a dict representing chunk events
+          exception_handler: callable for handling an `Exception` thrown from Java (optional)
+
+        Since: v4.0
+
+    register_damage_listener(
+        handler: Callable[[Dict[str, Any]], NoneType],
+        exception_handler: Callable[[Exception], NoneType] = None
+    ) -> int
+        Registers a handler to listen for damage events.
+
+        For a more user-friendly API, use `EventQueue` instead.  (__internal__)
+
+        Args:
+          handler: callable that repeatedly accepts a dict representing damage events
+          exception_handler: callable for handling an `Exception` thrown from Java (optional)
+
+        Since: v4.0
+
+    register_explosion_listener(
+        handler: Callable[[Dict[str, Any]], NoneType],
+        exception_handler: Callable[[Exception], NoneType] = None
+    ) -> int
+        Registers a handler to listen for explosion events.
+
+        For a more user-friendly API, use `EventQueue` instead.  (__internal__)
+
+        Args:
+          handler: callable that repeatedly accepts a dict representing explosion events
+          exception_handler: callable for handling an `Exception` thrown from Java (optional)
+
+        Since: v4.0
+
+    register_key_listener(
+        handler: Callable[[Dict[str, Any]], NoneType],
+        exception_handler: Callable[[Exception], NoneType] = None
+    ) -> int
+        Registers a handler for receiving keyboard events.
+
+        For a more user-friendly API, use `EventQueue` instead. (__internal__)
+
+        Args:
+          handler: callable that repeatedly accepts a dict representing key events
+          exception_handler: callable for handling an `Exception` thrown from Java (optional)
+
+        Returns:
+          ID for the new handler.
+
+        Update in v4.0:
+          Added return value for identifying the newly registered handler.
+
+        Since: v3.2
+
+    register_mouse_listener(
+        handler: Callable[[Dict[str, Any]], NoneType],
+        exception_handler: Callable[[Exception], NoneType] = None
+    ) -> int
+        Registers a handler for receiving mouse events.
+
+        For a more user-friendly API, use `EventQueue` instead. (__internal__)
+
+        Args:
+          handler: callable that repeatedly accepts a dict representing mouse events
+          exception_handler: callable for handling an `Exception` thrown from Java (optional)
+
+        Update in v4.0:
+          Added return value for identifying the newly registered handler.
+
+        Since: v4.0
+
+    register_take_item_listener(
+        handler: Callable[[Dict[str, Any]], NoneType],
+        exception_handler: Callable[[Exception], NoneType] = None
+    ) -> int
+        Registers a handler to listen for items being taken.
+
+        For a more user-friendly API, use `EventQueue` instead.  (__internal__)
+
+        Args:
+          handler: callable that repeatedly accepts a dict representing a taken item
+          exception_handler: callable for handling an `Exception` thrown from Java (optional)
+
+        Since: v4.0
+
+    run_tasks(tasks: List[minescript.Task])
+        Runs tasks so that multiple tasks can be run on the same executor cycle.
+
+    schedule_render_tasks(tasks: List[minescript.Task]) -> int
+        Schedules a list of tasks to run every cycle of the render loop.
+
+        Returns:
+          ID of scheduled task list which can be passed to `cancel_scheduled_tasks(task_list_id)`.
+
+        Since: v4.0
+
+    schedule_tick_tasks(tasks: List[minescript.Task]) -> int
+        Schedules a list of tasks to run every cycle of the tick loop.
+
+        Returns:
+          ID of scheduled task list which can be passed to `cancel_scheduled_tasks(task_list_id)`.
+
+        Since: v4.0
+
+    set_default_executor(executor: minescript_runtime.FunctionExecutor)
+        Sets the default executor for script functions executed in the current script job.
+
+        Default value is `minescript.render_loop`.
+
+        Args:
+          executor: one of `minescript.tick_loop`, `minescript.render_loop`, or `minescript.script_loop`
+
+        Since: v4.0
+
+    unregister_event_handler(handler_id: int)
+        Unregisters an event handler, if any, for the currently running job. (__internal__)
+
+        Args:
+          handler_id: ID of an event handler returned from a `register_...()` function.
+
+        Returns:
+          `True` if `handler_id` was successfully cancelled, `False` otherwise.
+
+        Since: v4.0
+
+DATA
+    BlockPos = typing.Tuple[int, int, int]
+    Callable = typing.Callable
+        Deprecated alias to collections.abc.Callable.
+
+        Callable[[int], str] signifies a function that takes a single
+        parameter of type int and returns a str.
+
+        The subscription syntax must always be used with exactly two
+        values: the argument list and the return type.
+        The argument list must be a list of types, a ParamSpec,
+        Concatenate or ellipsis. The return type must be a single type.
+
+        There is no syntax to indicate optional or keyword arguments;
+        such function types are rarely used as callback types.
+
+    Dict = typing.Dict
+        A generic version of dict.
+
+    EventType = _EventType(KEY='key', MOUSE='mouse', CHAT='chat'...E='dama...
+    ExceptionHandler = typing.Callable[[Exception], NoneType]
+    List = typing.List
+        A generic version of list.
+
+    Optional = typing.Optional
+        Optional[X] is equivalent to Union[X, None].
+
+    Rotation = typing.Tuple[int, int, int, int, int, int, int, int, int]
+    Set = typing.Set
+        A generic version of set.
+
+    Tuple = typing.Tuple
+        Deprecated alias to builtins.tuple.
+
+        Tuple[X, Y] is the cross-product type of X and Y.
+
+        Example: Tuple[T1, T2] is a tuple of two elements corresponding
+        to type variables T1 and T2.  Tuple[int, float, str] is a tuple
+        of an int, a float and a string.
+
+        To specify a variable-length tuple of homogeneous type, use Tuple[T, ...].
+
+    Union = typing.Union
+        Union type; Union[X, Y] means either X or Y.
+
+        On Python 3.10 and higher, the | operator
+        can also be used to denote unions;
+        X | Y means the same thing to the type checker as Union[X, Y].
+
+        To define a union, use e.g. Union[int, str]. Details:
+        - The arguments must be types and there must be at least one.
+        - None as an argument is a special case and is replaced by
+          type(None).
+        - Unions of unions are flattened, e.g.::
+
+            assert Union[Union[int, str], float] == Union[int, str, float]
+
+        - Unions of a single argument vanish, e.g.::
+
+            assert Union[int] == int  # The constructor actually returns int
+
+        - Redundant arguments are skipped, e.g.::
+
+            assert Union[int, str, int] == Union[int, str]
+
+        - When comparing unions, the argument order is ignored, e.g.::
+
+            assert Union[int, str] == Union[str, int]
+
+        - You cannot subclass or instantiate a union.
+        - You can use Optional[X] as a shorthand for Union[X, None].
+
+    Vector3f = typing.Tuple[float, float, float]
+    append_chat_history = <minescript_runtime.ScriptFunction object>
+    await_loaded_region = <minescript_runtime.ScriptFunction object>
+    blockpack_block_bounds = <minescript_runtime.ScriptFunction object>
+    blockpack_comments = <minescript_runtime.ScriptFunction object>
+    blockpack_delete = <minescript_runtime.ScriptFunction object>
+    blockpack_export_data = <minescript_runtime.ScriptFunction object>
+    blockpack_import_data = <minescript_runtime.ScriptFunction object>
+    blockpack_read_file = <minescript_runtime.ScriptFunction object>
+    blockpack_read_world = <minescript_runtime.ScriptFunction object>
+    blockpack_write_file = <minescript_runtime.ScriptFunction object>
+    blockpack_write_world = <minescript_runtime.ScriptFunction object>
+    blockpacker_add_blockpack = <minescript_runtime.ScriptFunction object>
+    blockpacker_add_blocks = <minescript_runtime.ScriptFunction object>
+    blockpacker_create = <minescript_runtime.ScriptFunction object>
+    blockpacker_delete = <minescript_runtime.ScriptFunction object>
+    blockpacker_pack = <minescript_runtime.ScriptFunction object>
+    chat = <minescript_runtime.NoReturnScriptFunction object>
+    chat_input = <minescript_runtime.ScriptFunction object>
+    container_get_items = <minescript_runtime.ScriptFunction object>
+    echo = <minescript_runtime.NoReturnScriptFunction object>
+    echo_json = <minescript_runtime.NoReturnScriptFunction object>
+    entities = <minescript_runtime.ScriptFunction object>
+    execute = <minescript_runtime.NoReturnScriptFunction object>
+    flush = <minescript_runtime.ScriptFunction object>
+    get_entities = <minescript_runtime.ScriptFunction object>
+    get_player = <minescript_runtime.ScriptFunction object>
+    get_players = <minescript_runtime.ScriptFunction object>
+    getblock = <minescript_runtime.ScriptFunction object>
+    getblocklist = <minescript_runtime.ScriptFunction object>
+    java_access_field = <minescript_runtime.ScriptFunction object>
+    java_array_index = <minescript_runtime.ScriptFunction object>
+    java_array_length = <minescript_runtime.ScriptFunction object>
+    java_assign = <minescript_runtime.ScriptFunction object>
+    java_bool = <minescript_runtime.ScriptFunction object>
+    java_call_method = <minescript_runtime.ScriptFunction object>
+    java_call_script_function = <minescript_runtime.ScriptFunction object>
+    java_class = <minescript_runtime.ScriptFunction object>
+    java_ctor = <minescript_runtime.ScriptFunction object>
+    java_double = <minescript_runtime.ScriptFunction object>
+    java_float = <minescript_runtime.ScriptFunction object>
+    java_int = <minescript_runtime.ScriptFunction object>
+    java_long = <minescript_runtime.ScriptFunction object>
+    java_member = <minescript_runtime.ScriptFunction object>
+    java_new_instance = <minescript_runtime.ScriptFunction object>
+    java_null = 0
+    java_release = <minescript_runtime.ScriptFunction object>
+    java_string = <minescript_runtime.ScriptFunction object>
+    java_to_string = <minescript_runtime.ScriptFunction object>
+    job_info = <minescript_runtime.ScriptFunction object>
+    log = <minescript_runtime.NoReturnScriptFunction object>
+    options = MinescriptRuntimeOptions(legacy_dict_return_values=False)
+    player = <minescript_runtime.ScriptFunction object>
+    player_get_targeted_block = <minescript_runtime.ScriptFunction object>
+    player_get_targeted_entity = <minescript_runtime.ScriptFunction object...
+    player_hand_items = <minescript_runtime.ScriptFunction object>
+    player_health = <minescript_runtime.ScriptFunction object>
+    player_inventory = <minescript_runtime.ScriptFunction object>
+    player_inventory_select_slot = <minescript_runtime.ScriptFunction obje...
+    player_inventory_slot_to_hotbar = <minescript_runtime.ScriptFunction o...
+    player_look_at = <minescript_runtime.ScriptFunction object>
+    player_name = <minescript_runtime.ScriptFunction object>
+    player_orientation = <minescript_runtime.ScriptFunction object>
+    player_position = <minescript_runtime.ScriptFunction object>
+    player_press_attack = <minescript_runtime.ScriptFunction object>
+    player_press_backward = <minescript_runtime.ScriptFunction object>
+    player_press_drop = <minescript_runtime.ScriptFunction object>
+    player_press_forward = <minescript_runtime.ScriptFunction object>
+    player_press_jump = <minescript_runtime.ScriptFunction object>
+    player_press_left = <minescript_runtime.ScriptFunction object>
+    player_press_pick_item = <minescript_runtime.ScriptFunction object>
+    player_press_right = <minescript_runtime.ScriptFunction object>
+    player_press_sneak = <minescript_runtime.ScriptFunction object>
+    player_press_sprint = <minescript_runtime.ScriptFunction object>
+    player_press_swap_hands = <minescript_runtime.ScriptFunction object>
+    player_press_use = <minescript_runtime.ScriptFunction object>
+    player_set_orientation = <minescript_runtime.ScriptFunction object>
+    players = <minescript_runtime.ScriptFunction object>
+    press_key_bind = <minescript_runtime.ScriptFunction object>
+    render_loop = <minescript_runtime.FunctionExecutor object>
+    screen_name = <minescript_runtime.ScriptFunction object>
+    screenshot = <minescript_runtime.ScriptFunction object>
+    script_loop = <minescript_runtime.FunctionExecutor object>
+    set_chat_input = <minescript_runtime.ScriptFunction object>
+    show_chat_screen = <minescript_runtime.ScriptFunction object>
+    tick_loop = <minescript_runtime.FunctionExecutor object>
+    version_info = <minescript_runtime.ScriptFunction object>
+    world_info = <minescript_runtime.ScriptFunction object>
+
+FILE
+    c:\users\nieh_\curseforge\minecraft\instances\official eternia cobblemon\minescript\system\lib\minescript.py
+
+
